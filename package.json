@@ -25,13 +25,21 @@
               {
                 "languages": ["*"],
                 "words": {
-                  "hte": "the"
+                  "hte": "the",
+                  "mispell": "misspell",
+                  "mispelled": "misspelled"
                 }
               },
               {
-                "languages": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+                "languages": [
+                  "javascript",
+                  "javascriptreact",
+                  "typescript",
+                  "typescriptreact"
+                ],
                 "words": {
-                  "cosnt": "const"
+                  "cosnt": "const",
+                  "functoin": "function"
                 }
               }
             ],
