@@ -13,6 +13,10 @@
     "activationEvents": [
       "*"
     ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/genesy/auto-correct"
+    },
     "main": "./out/extension",
     "contributes": {
       "configuration": {
