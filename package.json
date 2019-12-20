@@ -3,7 +3,7 @@
     "displayName": "Auto Correct",
     "description": "Auto corrects your common type errors",
     "version": "0.0.1",
-    "publisher": "sygene",
+    "publisher": "ctf0",
     "engines": {
         "vscode": "^1.25.0"
     },
@@ -11,47 +11,30 @@
         "Other"
     ],
     "activationEvents": [
-      "*"
+        "onCommand:type"
     ],
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/genesy/auto-correct"
-    },
+    "repository": "https://github.com/ctf0/auto-correct",
     "main": "./out/extension",
     "contributes": {
-      "configuration": {
-        "type": "object",
-        "title": "Auto Correct Configuration",
-        "properties": {
-          "auto-correct.dictionary": {
-            "type": "array",
-            "default": [
-              {
-                "languages": ["*"],
-                "words": {
-                  "hte": "the",
-                  "mispell": "misspell",
-                  "mispelled": "misspelled"
+        "configuration": {
+            "type": "object",
+            "title": "Auto Correct Configuration",
+            "properties": {
+                "auto-correct.dictionary": {
+                    "type": "object",
+                    "default": {
+                        "hte": "the",
+                        "mispell": "misspell",
+                        "mispelled": "misspelled",
+                        "cosnt": "const",
+                        "functoin": "function",
+                        "+>": "=>"
+                    },
+                    "uniqueItems": true,
+                    "description": "List of misspelled words to correct"
                 }
-              },
-              {
-                "languages": [
-                  "javascript",
-                  "javascriptreact",
-                  "typescript",
-                  "typescriptreact"
-                ],
-                "words": {
-                  "cosnt": "const",
-                  "functoin": "function"
-                }
-              }
-            ],
-            "scope": "resource",
-            "description": "List of misspelled words to correct"
-          }
+            }
         }
-      }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
