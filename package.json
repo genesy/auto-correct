@@ -2,7 +2,7 @@
     "name": "auto-correct",
     "displayName": "Auto Correct",
     "description": "Auto corrects your common type errors",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "ctf0",
     "engines": {
         "vscode": "^1.25.0"
