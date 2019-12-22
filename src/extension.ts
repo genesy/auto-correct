@@ -1,78 +1,76 @@
-'use strict';
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
 
+let config: any
+
+/**
+ * https://github.com/microsoft/vscode-extension-samples/blob/master/completions-sample/src/extension.ts
+ *
+ * @param   {[type]}  context:                 [context: description]
+ * @param   {[type]}  vscode.ExtensionContext  [vscode.ExtensionContext description]
+ *
+ * @return  {[type]}                           [return description]
+ */
 export function activate(context: vscode.ExtensionContext) {
-  vscode.workspace.onDidChangeTextDocument(event => {
-    correctTheWord(event);
-  });
+    getConfig()
+
+    registerProviders(context)
+
+    vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration('auto-correct')) {
+            getConfig()
+            registerProviders(context)
+        }
+    })
+}
+
+async function registerProviders(context: vscode.ExtensionContext) {
+    let list = getDic()
+    let keys = Object.keys(list)
+
+    for (const keyword of keys) {
+        let value = list[keyword]
+        let provider = await vscode.languages.registerCompletionItemProvider(
+            [
+                { scheme: 'file' },
+                { scheme: 'untitled' }
+            ],
+            {
+                provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+                    let range = document.lineAt(position).range
+                    let wordRange = document.getWordRangeAtPosition(position) || new vscode.Range(
+                        range.end.line,
+                        range.end.character - keyword.length,
+                        range.end.line,
+                        range.end.character
+                    )
+
+                    const comp = new vscode.CompletionItem(keyword)
+                    comp.documentation = `Auto Correct: replace with ${value}`
+                    comp.detail = value
+                    comp.commitCharacters = [keyword]
+                    comp.insertText = value
+                    comp.kind = vscode.CompletionItemKind.Text
+                    comp.range = wordRange
+
+                    return [
+                        comp
+                    ]
+                }
+            }
+        )
+
+        context.subscriptions.push(provider)
+    }
+}
+
+function getConfig() {
+    return config = vscode.workspace.getConfiguration('auto-correct')
+}
+
+function getDic() {
+    return config.dictionary
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-}
-
-interface Dictionary {
-  languages: string[];
-  words: Object;
-}
-
-function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
-  if (!event.contentChanges.length) {
-    return;
-  }
-  if (event.contentChanges[0].text.match(/[A-Za-z]/)) {
-    return;
-  }
-
-  const editor = vscode.window.activeTextEditor;
-  if (!editor) {
-    return;
-  }
-
-  const { selection } = editor;
-  const originalPosition = selection.start.translate(0, 1);
-  const startPos = new vscode.Position(0, 0);
-  const text = editor.document.getText(new vscode.Range(startPos, originalPosition));
-
-  const config = vscode.workspace.getConfiguration('auto-correct', editor.document.uri);
-  const dictionary = config.get<Dictionary[]>("dictionary", [{ languages:[], words: {} }]);
-
-  const re = /(\w+)[\W]?$/g;
-  const match = re.exec(text);
-  const lastWord = match && match.length > 1 && match[1];
-
-  if (!lastWord) {
-    return;
-  }
-
-  let globalWords:Object = {};
-  let languageWords:Object = {};
-
-  dictionary.forEach(d => {
-    const isGlobal = d.languages.length === 1 &&  d.languages[0] === '*';
-    const isCurrentLanguage = d.languages.includes(editor.document.languageId);
-    if (isGlobal) {
-      globalWords = d.words;
-    }
-
-    if (isCurrentLanguage) {
-      languageWords = d.words;
-    }
-  });
-
-  const words:any = Object.assign({}, globalWords, languageWords);
-  const keys = Object.keys(words);
-
-  if(keys.includes(lastWord)) {
-    editor.edit(editBuilder => {
-      const contentChangeRange = event.contentChanges[0].range;
-      const startLine = contentChangeRange.start.line;
-      const startCharacter = contentChangeRange.start.character;
-      const start = new vscode.Position(startLine, startCharacter);
-      const end = new vscode.Position(startLine, startCharacter - lastWord.length);
-
-      editBuilder.delete(new vscode.Range(start, end));
-      editBuilder.insert(start, words[lastWord]);
-    });
-  }
 }
