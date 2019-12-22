@@ -2,8 +2,8 @@
     "name": "auto-correct",
     "displayName": "Auto Correct",
     "description": "Auto corrects your common type errors",
-    "version": "0.0.2",
-    "publisher": "ctf0",
+    "version": "0.0.1",
+    "publisher": "sygene",
     "engines": {
         "vscode": "^1.25.0"
     },
@@ -13,7 +13,7 @@
     "activationEvents": [
         "onCommand:type"
     ],
-    "repository": "https://github.com/ctf0/auto-correct",
+    "repository": "https://github.com/genesy/auto-correct",
     "main": "./out/extension",
     "contributes": {
         "configuration": {
@@ -27,8 +27,7 @@
                         "mispell": "misspell",
                         "mispelled": "misspelled",
                         "cosnt": "const",
-                        "functoin": "function",
-                        "+>": "=>"
+                        "functoin": "function"
                     },
                     "uniqueItems": true,
                     "description": "List of misspelled words to correct"

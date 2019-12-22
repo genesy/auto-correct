@@ -1,8 +1,12 @@
 # Auto Correct for VS Code
 
-based on https://github.com/genesy/auto-correct but using [CompletionItemProvider](https://code.visualstudio.com/api/references/vscode-api#languages.registerCompletionItemProvider)
+A simple VisualStudio Code extension that corrects your commonly misspelled words
 
-## Config
+## Features
+
+After typing an incorrectly spelled word, the extension will automatically replace it with the correct variant of the the word
+
+## Extension Settings
 
 ```json
 "auto-correct.dictionary": {
@@ -10,9 +14,6 @@ based on https://github.com/genesy/auto-correct but using [CompletionItemProvide
     "mispell": "misspell",
     "mispelled": "misspelled",
     "cosnt": "const",
-    "functoin": "function",
-    "+>": "=>"
+    "functoin": "function"
 }
 ```
-
-- enable `"editor.suggest.insertMode": "replace"`
