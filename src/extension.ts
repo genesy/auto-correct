@@ -35,12 +35,7 @@ async function registerProviders(context: vscode.ExtensionContext) {
                 { scheme: 'untitled' }
             ],
             {
-                provideCompletionItems(
-                    document: vscode.TextDocument,
-                    position: vscode.Position,
-                    token: vscode.CancellationToken,
-                    context: vscode.CompletionContext
-                ) {
+                provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
                     let range = document.lineAt(position).range
                     let wordRange = document.getWordRangeAtPosition(position) || new vscode.Range(
                         range.end.line,
@@ -49,20 +44,16 @@ async function registerProviders(context: vscode.ExtensionContext) {
                         range.end.character
                     )
 
-                    // a completion item that can be accepted by a commit character,
-                    // the `commitCharacters`-property is set which means that the completion will
-                    // be inserted and then the character will be typed.
-                    const commitCharacterCompletion = new vscode.CompletionItem(keyword)
-                    commitCharacterCompletion.documentation = `Auto Correct: replace with ${value}`
-                    commitCharacterCompletion.detail = value
-                    commitCharacterCompletion.commitCharacters = [keyword]
-                    commitCharacterCompletion.insertText = value
-                    commitCharacterCompletion.kind = vscode.CompletionItemKind.Text
-                    commitCharacterCompletion.range = wordRange
+                    const comp = new vscode.CompletionItem(keyword)
+                    comp.documentation = `Auto Correct: replace with ${value}`
+                    comp.detail = value
+                    comp.commitCharacters = [keyword]
+                    comp.insertText = value
+                    comp.kind = vscode.CompletionItemKind.Text
+                    comp.range = wordRange
 
-                    // return all completion items as array
                     return [
-                        commitCharacterCompletion
+                        comp
                     ]
                 }
             }
