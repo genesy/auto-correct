@@ -25,7 +25,6 @@
                     "default": {
                         "hte": "the",
                         "mispell": "misspell",
-                        "mispelled": "misspelled",
                         "cosnt": "const",
                         "functoin": "function"
                     },
