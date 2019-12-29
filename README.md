@@ -4,7 +4,7 @@ A simple VisualStudio Code extension that corrects your commonly misspelled word
 
 ## Features
 
-After typing an incorrectly spelled word, the extension will automatically replace it with the correct variant of the the word
+After typing an incorrectly spelled word, the extension will automatically replace it with the correct variant of the word
 
 ## Extension Settings
 
@@ -12,7 +12,6 @@ After typing an incorrectly spelled word, the extension will automatically repla
 "auto-correct.dictionary": {
     "hte": "the",
     "mispell": "misspell",
-    "mispelled": "misspelled",
     "cosnt": "const",
     "functoin": "function"
 }
