@@ -1,70 +1,71 @@
 {
-    "name": "auto-correct",
-    "displayName": "Auto Correct",
-    "description": "Auto corrects your common type errors",
-    "version": "0.0.1",
-    "publisher": "sygene",
-    "engines": {
-        "vscode": "^1.25.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-      "*"
-    ],
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/genesy/auto-correct"
-    },
-    "main": "./out/extension",
-    "contributes": {
-      "configuration": {
-        "type": "object",
-        "title": "Auto Correct Configuration",
-        "properties": {
-          "auto-correct.dictionary": {
-            "type": "array",
-            "default": [
-              {
-                "languages": ["*"],
-                "words": {
-                  "hte": "the",
-                  "mispell": "misspell",
-                  "mispelled": "misspelled"
-                }
-              },
-              {
-                "languages": [
-                  "javascript",
-                  "javascriptreact",
-                  "typescript",
-                  "typescriptreact"
-                ],
-                "words": {
-                  "cosnt": "const",
-                  "functoin": "function"
-                }
+  "name": "auto-correct",
+  "displayName": "Auto Correct",
+  "description": "Auto corrects your common type errors",
+  "version": "0.0.1",
+  "publisher": "sygene",
+  "engines": {
+    "vscode": "^1.25.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genesy/auto-correct"
+  },
+  "main": "./out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Auto Correct Configuration",
+      "properties": {
+        "auto-correct.dictionary": {
+          "type": "array",
+          "default": [
+            {
+              "languages": [
+                "*"
+              ],
+              "words": {
+                "hte": "the",
+                "AAA{ONE,TWO}BBB{THREE,FOUR,FIVE}CCC{SIX,SEVEN}DDD": "p{}ck{a,o}iit,{},bitch"
               }
-            ],
-            "scope": "resource",
-            "description": "List of misspelled words to correct"
-          }
+            },
+            {
+              "languages": [
+                "javascript",
+                "javascriptreact",
+                "typescript",
+                "typescriptreact"
+              ],
+              "words": {
+                "cosnt": "const",
+                "functoin": "function"
+              }
+            }
+          ],
+          "scope": "resource",
+          "description": "List of misspelled words to correct"
         }
       }
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.21",
-        "tslint": "^5.8.0",
-        "@types/node": "^8.10.25",
-        "@types/mocha": "^2.2.42"
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.5",
+    "vscode": "^1.1.21",
+    "tslint": "^6.0.0",
+    "@types/node": "^8.10.25",
+    "@types/mocha": "^2.2.42"
+  }
 }
