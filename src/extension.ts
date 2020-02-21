@@ -48,7 +48,8 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
     { languages: [], words: {} },
   ]);
 
-  const re = /(\w+)[\W]?$/g;
+  // matches letters and special letters
+  const re = /(\p{L}+)[\W]?$/gu;
   const match = re.exec(text);
   const lastWord = match && match.length > 1 && match[1];
 
