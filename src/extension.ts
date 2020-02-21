@@ -8,8 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
-}
+export function deactivate() {}
 
 interface Dictionary {
   languages: string[];
@@ -20,7 +19,12 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
   if (!event.contentChanges.length) {
     return;
   }
-  if (event.contentChanges[0].text.match(/[A-Za-z]/)) {
+  console.log(event.contentChanges[0].text);
+  console.log(
+    !!event.contentChanges[0].text.match(/[A-Za-z]/) ? 'matched' : 'not'
+  );
+  // if
+  if (!!event.contentChanges[0].text.match(/[A-Za-z]/)) {
     return;
   }
 
@@ -32,10 +36,17 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
   const { selection } = editor;
   const originalPosition = selection.start.translate(0, 1);
   const startPos = new vscode.Position(0, 0);
-  const text = editor.document.getText(new vscode.Range(startPos, originalPosition));
+  const text = editor.document.getText(
+    new vscode.Range(startPos, originalPosition)
+  );
 
-  const config = vscode.workspace.getConfiguration('auto-correct', editor.document.uri);
-  const dictionary = config.get<Dictionary[]>("dictionary", [{ languages:[], words: {} }]);
+  const config = vscode.workspace.getConfiguration(
+    'auto-correct',
+    editor.document.uri
+  );
+  const dictionary = config.get<Dictionary[]>('dictionary', [
+    { languages: [], words: {} },
+  ]);
 
   const re = /(\w+)[\W]?$/g;
   const match = re.exec(text);
@@ -45,11 +56,11 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
     return;
   }
 
-  let globalWords:Object = {};
-  let languageWords:Object = {};
+  let globalWords: Object = {};
+  let languageWords: Object = {};
 
   dictionary.forEach(d => {
-    const isGlobal = d.languages.length === 1 &&  d.languages[0] === '*';
+    const isGlobal = d.languages.length === 1 && d.languages[0] === '*';
     const isCurrentLanguage = d.languages.includes(editor.document.languageId);
     if (isGlobal) {
       globalWords = d.words;
@@ -60,19 +71,28 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
     }
   });
 
-  const words:any = Object.assign({}, globalWords, languageWords);
+  const words: any = Object.assign({}, globalWords, languageWords);
   const keys = Object.keys(words);
 
-  if(keys.includes(lastWord)) {
-    editor.edit(editBuilder => {
-      const contentChangeRange = event.contentChanges[0].range;
-      const startLine = contentChangeRange.start.line;
-      const startCharacter = contentChangeRange.start.character;
-      const start = new vscode.Position(startLine, startCharacter);
-      const end = new vscode.Position(startLine, startCharacter - lastWord.length);
+  if (keys.includes(lastWord)) {
+    editor.edit(
+      editBuilder => {
+        const contentChangeRange = event.contentChanges[0].range;
+        const startLine = contentChangeRange.start.line;
+        const startCharacter = contentChangeRange.start.character;
+        const start = new vscode.Position(startLine, startCharacter);
+        const end = new vscode.Position(
+          startLine,
+          startCharacter - lastWord.length
+        );
 
-      editBuilder.delete(new vscode.Range(start, end));
-      editBuilder.insert(start, words[lastWord]);
-    });
+        editBuilder.delete(new vscode.Range(start, end));
+        editBuilder.insert(start, words[lastWord]);
+      },
+      {
+        undoStopAfter: false,
+        undoStopBefore: false,
+      }
+    );
   }
 }
