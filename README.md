@@ -8,7 +8,8 @@ After typing an incorrectly spelled word, the extension will automatically repla
 
 ## Extension Settings
 
-* `auto-correct.dictionary`: this is where you add words to auto correct
+- `auto-correct.dictionary`: this is where you add words to auto correct
+
 ```
   "auto-correct.dictionary": [
     {
@@ -34,11 +35,10 @@ After typing an incorrectly spelled word, the extension will automatically repla
   ]
 ```
 
-* `"languages": ["*"]`: this is the global dictionary, it'll work on every language type
- 
+- `"languages": ["*"]`: this is the global dictionary, it'll work on every language type
 
 ## Release Notes
 
-### 0.0.1
+### 0.2.0
 
 Bare bones release of Auto Correct

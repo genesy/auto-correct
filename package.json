@@ -2,7 +2,7 @@
   "name": "auto-correct",
   "displayName": "Auto Correct",
   "description": "Auto corrects your common type errors",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "publisher": "sygene",
   "engines": {
     "vscode": "^1.25.0"
@@ -31,9 +31,9 @@
                 "*"
               ],
               "words": {
-                "hte": "the",
-                "AAA{ONE,TWO}BBB{THREE,FOUR,FIVE}CCC{SIX,SEVEN}DDD": "AAA{ISA,DALAWA}BBB{}CCC{SICKS,SEBEN}DDD"
-              }
+                "hte": "the"
+              },
+              "useLargeList": true
             },
             {
               "languages": [

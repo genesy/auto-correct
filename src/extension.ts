@@ -1,5 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
+import * as largeList from './defaultList.json';
 let words: any;
 export function activate(context: vscode.ExtensionContext) {
   vscode.workspace.onDidOpenTextDocument(() => {
@@ -17,6 +18,7 @@ export function deactivate() {}
 interface Dictionary {
   languages: string[];
   words: Object;
+  useLargeList: Boolean;
 }
 const getWords = ({ editor }: any): any => {
   const config = vscode.workspace.getConfiguration(
@@ -24,7 +26,7 @@ const getWords = ({ editor }: any): any => {
     editor.document.uri
   );
   const dictionary = config.get<Dictionary[]>('dictionary', [
-    { languages: [], words: {} },
+    { languages: [], words: {}, useLargeList: false },
   ]);
   let globalWords: Object = {};
   let languageWords: Object = {};
@@ -35,11 +37,15 @@ const getWords = ({ editor }: any): any => {
     const isCurrentLanguage = d.languages.includes(editor.document.languageId);
     if (isGlobal) {
       globalWords = d.words;
+      if (d.useLargeList) {
+        globalWords = { ...d.words, ...largeList };
+      }
     }
     if (isCurrentLanguage) {
       languageWords = d.words;
     }
   });
+
   const words: any = Object.assign({}, globalWords, languageWords);
   return words;
 };
