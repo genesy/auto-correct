@@ -102,18 +102,28 @@ const getWords = ({ editor }: any): any => {
           Number(totalWords)
         ).fill(beginningValuePart);
 
+        let prevRepeatCount = 0;
         keyMatch.forEach((km, kmIndex) => {
           const keyParts = km.slice(1, -1).split(',');
           const vm = valueMatch[kmIndex];
           const valueParts = vm.slice(1, -1).split(',');
+          // const repeatCount =
+          //   prevRepeatCount / keyParts.length || totalWords / keyParts.length;
+          const repeatCount = totalWords / keyParts.length;
           keyParts.forEach((keyPart, kpIndex) => {
-            const repeatCount = totalWords / keyParts.length;
+            console.log('totalWords', totalWords);
+            console.log('keyParts.length', keyParts.length);
+
+            console.log('repeatCount', repeatCount);
             const valuePart = valueParts[kpIndex];
+            console.log('keyPart', keyPart);
+            console.log('==========');
             for (let i = 0; i < repeatCount; i++) {
-              const index = repeatCount * kpIndex + i;
+              let index = repeatCount * kpIndex + i;
+              index += repeatCount;
+              console.log('index', index);
               newKeyWords[index] += keyPart;
               newKeyWords[index] += middleKeyParts[kmIndex] || '';
-
               if (!!valuePart) {
                 newValueWords[index] += valuePart;
               } else {
@@ -121,6 +131,7 @@ const getWords = ({ editor }: any): any => {
               }
               newValueWords[index] += middleValueParts[kmIndex] || '';
             }
+            prevRepeatCount = repeatCount;
           });
         });
 
@@ -138,7 +149,8 @@ const getWords = ({ editor }: any): any => {
             console.log(key, value);
           }
         });
-        console.log(newWords);
+        console.log(newKeyWords);
+        // console.log(newWords);
       }
     }
   });
