@@ -11,7 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onCommand:type"
   ],
   "repository": {
     "type": "git",
@@ -45,7 +45,13 @@
               "words": {
                 "cosnt": "const",
                 "functoin": "function"
-              }
+              },
+              "triggers": [
+                ";",
+                ",",
+                ")",
+                "\n"
+              ]
             }
           ],
           "scope": "resource",

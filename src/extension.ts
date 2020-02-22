@@ -1,15 +1,36 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as largeList from './defaultList.json';
+
+let config: vscode.WorkspaceConfiguration;
 let words: any;
+let triggers: string[];
+
 export function activate(context: vscode.ExtensionContext) {
   vscode.workspace.onDidOpenTextDocument(() => {
-    const editor = vscode.window.activeTextEditor;
-    words = getWords({ editor });
+    console.log('onDidOpenTextDocument');
+    words = getWords();
   });
   vscode.workspace.onDidChangeTextDocument(event => {
+    if (!words) {
+      words = getWords();
+    }
     correctTheWord(event);
   });
+  vscode.workspace.onDidChangeConfiguration(e => {
+    if (e.affectsConfiguration('auto-correct')) {
+      console.log('oh no');
+      getConfig();
+    }
+  });
+}
+function getConfig() {
+  const editor: any = vscode.window.activeTextEditor;
+  config = vscode.workspace.getConfiguration(
+    'auto-correct',
+    editor.document.uri
+  );
+  return config;
 }
 
 // this method is called when your extension is deactivated
@@ -19,14 +40,16 @@ interface Dictionary {
   languages: string[];
   words: Object;
   useLargeList: Boolean;
+  triggers: string[];
 }
-const getWords = ({ editor }: any): any => {
-  const config = vscode.workspace.getConfiguration(
-    'auto-correct',
-    editor.document.uri
-  );
+const getWords = (): any => {
+  const editor: any = vscode.window.activeTextEditor;
+  if (!editor) {
+    console.log('no editor');
+  }
+  config = getConfig();
   const dictionary = config.get<Dictionary[]>('dictionary', [
-    { languages: [], words: {}, useLargeList: false },
+    { languages: [], words: {}, useLargeList: false, triggers: [] },
   ]);
   let globalWords: Object = {};
   let languageWords: Object = {};
@@ -44,9 +67,12 @@ const getWords = ({ editor }: any): any => {
     if (isCurrentLanguage) {
       languageWords = d.words;
     }
+    if (isCurrentLanguage || isGlobal) {
+      triggers = d.triggers || [];
+    }
   });
 
-  const words: any = Object.assign({}, globalWords, languageWords);
+  words = Object.assign({}, globalWords, languageWords);
   return words;
 };
 
@@ -75,6 +101,13 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
   const re = /(\p{L}+)[\W]?$/gu;
   const match = re.exec(text);
   const lastWord = match && match.length > 1 && match[1];
+
+  if (triggers.length) {
+    const lastTyped = text.substr(-1);
+    if (!triggers.includes(lastTyped)) {
+      return;
+    }
+  }
 
   if (!lastWord) {
     return;
