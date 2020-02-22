@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import { getConfig, getWords } from './helpers';
+import { getWords } from './helpers';
 
 // let config: vscode.WorkspaceConfiguration;
 let words: any;
