@@ -1,10 +1,11 @@
 'use strict';
 import * as vscode from 'vscode';
-
-const parseDictionary = () => {};
-
+let words: any;
 export function activate(context: vscode.ExtensionContext) {
-  parseDictionary();
+  vscode.workspace.onDidOpenTextDocument(() => {
+    const editor = vscode.window.activeTextEditor;
+    words = getWords({ editor });
+  });
   vscode.workspace.onDidChangeTextDocument(event => {
     correctTheWord(event);
   });
@@ -40,108 +41,6 @@ const getWords = ({ editor }: any): any => {
     }
   });
   const words: any = Object.assign({}, globalWords, languageWords);
-  Object.keys(words).forEach(key => {
-    const value = words[key];
-    const keyReg = /\{.+?\,.+?\}/g;
-    const keyMatch = key.match(keyReg);
-    const valueReg = /{}|{.+?,.+?}/g;
-    const valueMatch = value.match(valueReg);
-    const middleReg = /\}(.+?)\{/g;
-    if (!!keyMatch && !!valueMatch) {
-      if (keyMatch.length === valueMatch.length) {
-        const beginningReg = /^.+?\{/g;
-        const endReg = /(?:(?!\}).)*$/g;
-
-        const middleKeyMatch = key.match(middleReg);
-        const middleKeyParts: string[] = [];
-        const beginningKeyMatch = key.match(beginningReg);
-        const endKeyMatch = key.match(endReg);
-
-        let beginningKeyPart = '';
-        let endKeyPart = '';
-        if (beginningKeyMatch) {
-          beginningKeyPart = beginningKeyMatch[0].slice(0, -1);
-        }
-        if (endKeyMatch) {
-          endKeyPart = endKeyMatch[0];
-        }
-        if (!!middleKeyMatch) {
-          middleKeyMatch.forEach((middleKey, mkIndex) => {
-            middleKeyParts.push(middleKey.slice(1, -1));
-          });
-        }
-
-        const middleValueMatch = value.match(middleReg);
-        const middleValueParts: string[] = [];
-        const beginningValueMatch = value.match(beginningReg);
-        const endValueMatch = value.match(endReg);
-
-        let beginningValuePart = '';
-        let endValuePart = '';
-        if (beginningValueMatch) {
-          beginningValuePart = beginningValueMatch[0].slice(0, -1);
-        }
-        if (endValueMatch) {
-          endValuePart = endValueMatch[0];
-        }
-        if (!!middleValueMatch) {
-          middleValueMatch.forEach((middleKey: string, mkIndex: number) => {
-            middleValueParts.push(middleKey.slice(1, -1));
-          });
-        }
-
-        const cc = key.match(/,/g);
-        const commaCount = (cc && cc.length) || 0;
-        let totalWords = keyMatch.length * commaCount;
-
-        const newKeyWords: string[] | null[] = new Array(
-          Number(totalWords)
-        ).fill(beginningKeyPart);
-
-        const newValueWords: string[] | null[] = new Array(
-          Number(totalWords)
-        ).fill(beginningValuePart);
-
-        keyMatch.forEach((km, kmIndex) => {
-          const keyParts = km.slice(1, -1).split(',');
-          const vm = valueMatch[kmIndex];
-          const valueParts = vm.slice(1, -1).split(',');
-          keyParts.forEach((keyPart, kpIndex) => {
-            const repeatCount = totalWords / keyParts.length;
-            const valuePart = valueParts[kpIndex];
-            for (let i = 0; i < repeatCount; i++) {
-              const index = repeatCount * kpIndex + i;
-              newKeyWords[index] += keyPart;
-              newKeyWords[index] += middleKeyParts[kmIndex] || '';
-
-              if (!!valuePart) {
-                newValueWords[index] += valuePart;
-              } else {
-                newValueWords[index] += keyPart;
-              }
-              newValueWords[index] += middleValueParts[kmIndex] || '';
-            }
-          });
-        });
-
-        const newWords: any = {};
-        newKeyWords.forEach((_kw: string | null, i: number) => {
-          newKeyWords[i] += endKeyPart;
-          newValueWords[i] += endValuePart;
-          const key = newKeyWords[i];
-          const value = newValueWords[i];
-          console.log(key);
-
-          if (key && value) {
-            newWords[key] = value;
-          } else {
-            console.log(key, value);
-          }
-        });
-        console.log(newWords);
-      }
-    }
-  });
   return words;
 };
 
@@ -175,7 +74,6 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
     return;
   }
 
-  const words = getWords({ editor });
   const keys = Object.keys(words);
 
   if (keys.includes(lastWord)) {
