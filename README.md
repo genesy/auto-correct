@@ -6,6 +6,8 @@ A simple VisualStudio Code extension that corrects your commonly misspelled word
 
 After typing an incorrectly spelled word, the extension will automatically replace it with the correct variant of the the word
 
+![Gif of Example](https://i.imgur.com/DMol9HD.gif)
+
 ## Extension Settings
 
 - `auto-correct.dictionary`: this is where you add words to auto correct

@@ -17,6 +17,7 @@
     "type": "git",
     "url": "https://github.com/genesy/auto-correct"
   },
+  "icon": "./icon.png",
   "main": "./out/extension",
   "contributes": {
     "configuration": {
@@ -45,13 +46,7 @@
               "words": {
                 "cosnt": "const",
                 "functoin": "function"
-              },
-              "triggers": [
-                ";",
-                ",",
-                ")",
-                "\n"
-              ]
+              }
             }
           ],
           "scope": "resource",
