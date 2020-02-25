@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import Dictionary from './types/Dictionary';
 import * as largeList from './defaultList.json';
+import expandBraces from './expandBraces';
 
 export function getWords() {
   const editor: any = vscode.window.activeTextEditor;
@@ -28,7 +29,7 @@ export function getWords() {
   });
 
   const words = Object.assign({}, globalWords, languageWords);
-  return words;
+  return expandBraces(words);
 }
 
 export function getConfig() {
