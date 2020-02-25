@@ -1,6 +1,6 @@
 # Auto Correct for VS Code
 
-A simple VisualStudio Code extension that corrects your commonly misspelled words
+A simple VisualStudio Code extension that corrects your commonly misspelled words. Heavily inspired by vim's :IAbbrev and vim-abolish plugin
 
 ## Features
 
@@ -19,7 +19,8 @@ After typing an incorrectly spelled word, the extension will automatically repla
       "words": {
         "hte": "the",
         "mispell": "misspell",
-        "mispelled": "misspelled"
+        "mispelled": "misspelled",
+        "{despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}": "{despe,sepa}rat{}"
       },
       "useLargeList": false
     },
@@ -41,7 +42,45 @@ After typing an incorrectly spelled word, the extension will automatically repla
 - `"languages": ["*"]`: this is the global dictionary, it'll work on every language type
 - `useLargeList`: set to true to use some default key pairs
 
+A feature from vim'sa [ vim-abolish plugin ](https://github.com/tpope/vim-abolish)
+
+```
+"words": {
+  ...
+  "{despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}": "{despe,sepa}rat{}"
+}
+```
+
+This will be automatically converted to the following
+
+```
+"words": {
+  ...
+  "desparate": "desperate",
+  "desparates": "desperates",
+  "desparated": "desperated",
+  "desparating": "desperating",
+  "desparately": "desperately",
+  "desparation": "desperation",
+  "desparations": "desperations",
+  "desparator": "desperator",
+  "seperate": "separate",
+  "seperates": "separates",
+  "seperated": "separated",
+  "seperating": "separating",
+  "seperately": "separately",
+  "seperation": "separation",
+  "seperations": "separations",
+  "seperator": "separator"
+}
+```
+
 ## Release Notes
+
+### 0.2.1
+
+Adds vim-abolish's way of making multiple dictionary words https://github.com/tpope/vim-abolish
+Adds initial code for tests
 
 ### 0.2.0
 

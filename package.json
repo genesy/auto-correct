@@ -31,10 +31,8 @@
               "languages": [
                 "*"
               ],
-              "words": {
-                "hte": "the"
-              },
-              "useLargeList": true
+              "words": {},
+              "useLargeList": false
             },
             {
               "languages": [
