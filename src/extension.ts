@@ -1,50 +1,29 @@
 'use strict';
 import * as vscode from 'vscode';
-import expandBraces from './expandBraces';
+import { getWords } from './helpers';
 
-const parseDictionary = () => {};
+// let config: vscode.WorkspaceConfiguration;
+let words: any;
+// let triggers: string[];
 
 export function activate(context: vscode.ExtensionContext) {
-  parseDictionary();
+  words = words || getWords();
+  vscode.workspace.onDidOpenTextDocument(() => {
+    words = words || getWords();
+  });
   vscode.workspace.onDidChangeTextDocument(event => {
+    words = words || getWords();
     correctTheWord(event);
   });
+  // vscode.workspace.onDidChangeConfiguration(e => {
+  //   if (e.affectsConfiguration('auto-correct')) {
+  //     config = getConfig();
+  //   }
+  // });
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
-
-interface Dictionary {
-  languages: string[];
-  words: Object;
-}
-const getWords = ({ editor }: any): any => {
-  const config = vscode.workspace.getConfiguration(
-    'auto-correct',
-    editor.document.uri
-  );
-  const dictionary = config.get<Dictionary[]>('dictionary', [
-    { languages: [], words: {} },
-  ]);
-  let globalWords: Object = {};
-  let languageWords: Object = {};
-
-  // TODO: move this outside this event
-  dictionary.forEach(d => {
-    const isGlobal = d.languages.length === 1 && d.languages[0] === '*';
-    const isCurrentLanguage = d.languages.includes(editor.document.languageId);
-    if (isGlobal) {
-      globalWords = d.words;
-    }
-    if (isCurrentLanguage) {
-      languageWords = d.words;
-    }
-  });
-  let words: any = Object.assign({}, globalWords, languageWords);
-  words = expandBraces(words);
-  console.log(words);
-  return words;
-};
 
 function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
   if (!event.contentChanges.length) {
@@ -72,11 +51,17 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
   const match = re.exec(text);
   const lastWord = match && match.length > 1 && match[1];
 
+  // if (triggers.length) {
+  //   const lastTyped = text.substr(-1);
+  //   if (!triggers.includes(lastTyped)) {
+  //     return;
+  //   }
+  // }
+
   if (!lastWord) {
     return;
   }
 
-  const words = getWords({ editor });
   const keys = Object.keys(words);
 
   if (keys.includes(lastWord)) {
