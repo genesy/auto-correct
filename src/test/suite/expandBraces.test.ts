@@ -1,12 +1,13 @@
 import * as assert from 'assert';
-import expandBraces from '../expandBraces';
+import expandBraces from '../../expandBraces';
 
 suite('expandBraces()', function() {
   test("'despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}' => '{despe,sepa}rat{}'", function() {
     const dict = {
-      'despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}': '{despe,sepa}rat{}',
+      '{despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}': '{despe,sepa}rat{}',
     };
-    assert.deepEqual(expandBraces(dict), {
+    const word = expandBraces(dict);
+    assert.deepEqual(word, {
       desparate: 'desperate',
       desparates: 'desperates',
       desparated: 'desperated',
