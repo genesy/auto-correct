@@ -1,5 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
+import expandBraces from './expandBraces';
 
 const parseDictionary = () => {};
 
@@ -39,121 +40,9 @@ const getWords = ({ editor }: any): any => {
       languageWords = d.words;
     }
   });
-  const words: any = Object.assign({}, globalWords, languageWords);
-  Object.keys(words).forEach(key => {
-    const value = words[key];
-    const keyReg = /\{.+?\,.+?\}/g;
-    const keyMatch = key.match(keyReg);
-    const valueReg = /{}|{.+?,.+?}/g;
-    const valueMatch = value.match(valueReg);
-    const middleReg = /\}(.+?)\{/g;
-    if (!!keyMatch && !!valueMatch) {
-      if (keyMatch.length === valueMatch.length) {
-        const beginningReg = /^.+?\{/g;
-        const endReg = /(?:(?!\}).)*$/g;
-
-        const middleKeyMatch = key.match(middleReg);
-        const middleKeyParts: string[] = [];
-        const beginningKeyMatch = key.match(beginningReg);
-        const endKeyMatch = key.match(endReg);
-
-        let beginningKeyPart = '';
-        let endKeyPart = '';
-        if (beginningKeyMatch) {
-          beginningKeyPart = beginningKeyMatch[0].slice(0, -1);
-        }
-        if (endKeyMatch) {
-          endKeyPart = endKeyMatch[0];
-        }
-        if (!!middleKeyMatch) {
-          middleKeyMatch.forEach((middleKey, mkIndex) => {
-            middleKeyParts.push(middleKey.slice(1, -1));
-          });
-        }
-
-        const middleValueMatch = value.match(middleReg);
-        const middleValueParts: string[] = [];
-        const beginningValueMatch = value.match(beginningReg);
-        const endValueMatch = value.match(endReg);
-
-        let beginningValuePart = '';
-        let endValuePart = '';
-        if (beginningValueMatch) {
-          beginningValuePart = beginningValueMatch[0].slice(0, -1);
-        }
-        if (endValueMatch) {
-          endValuePart = endValueMatch[0];
-        }
-        if (!!middleValueMatch) {
-          middleValueMatch.forEach((middleKey: string, mkIndex: number) => {
-            middleValueParts.push(middleKey.slice(1, -1));
-          });
-        }
-
-        const cc = key.match(/,/g);
-        const commaCount = (cc && cc.length) || 0;
-        let totalWords = keyMatch.length * commaCount;
-
-        const newKeyWords: string[] | null[] = new Array(
-          Number(totalWords)
-        ).fill(beginningKeyPart);
-
-        const newValueWords: string[] | null[] = new Array(
-          Number(totalWords)
-        ).fill(beginningValuePart);
-
-        let prevRepeatCount = 0;
-        keyMatch.forEach((km, kmIndex) => {
-          const keyParts = km.slice(1, -1).split(',');
-          const vm = valueMatch[kmIndex];
-          const valueParts = vm.slice(1, -1).split(',');
-          // const repeatCount =
-          //   prevRepeatCount / keyParts.length || totalWords / keyParts.length;
-          const repeatCount = totalWords / keyParts.length;
-          keyParts.forEach((keyPart, kpIndex) => {
-            console.log('totalWords', totalWords);
-            console.log('keyParts.length', keyParts.length);
-
-            console.log('repeatCount', repeatCount);
-            const valuePart = valueParts[kpIndex];
-            console.log('keyPart', keyPart);
-            console.log('==========');
-            for (let i = 0; i < repeatCount; i++) {
-              let index = repeatCount * kpIndex + i;
-              index += repeatCount;
-              console.log('index', index);
-              newKeyWords[index] += keyPart;
-              newKeyWords[index] += middleKeyParts[kmIndex] || '';
-              if (!!valuePart) {
-                newValueWords[index] += valuePart;
-              } else {
-                newValueWords[index] += keyPart;
-              }
-              newValueWords[index] += middleValueParts[kmIndex] || '';
-            }
-            prevRepeatCount = repeatCount;
-          });
-        });
-
-        const newWords: any = {};
-        newKeyWords.forEach((_kw: string | null, i: number) => {
-          newKeyWords[i] += endKeyPart;
-          newValueWords[i] += endValuePart;
-          const key = newKeyWords[i];
-          const value = newValueWords[i];
-          console.log(key);
-
-          if (key && value) {
-            newWords[key] = value;
-          } else {
-            console.log(key, value);
-          }
-        });
-        console.log(newKeyWords);
-        // console.log(newWords);
-      }
-    }
-  });
+  let words: any = Object.assign({}, globalWords, languageWords);
+  words = expandBraces(words);
+  console.log(words);
   return words;
 };
 

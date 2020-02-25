@@ -32,7 +32,7 @@
               ],
               "words": {
                 "hte": "the",
-                "AAA{ONE,TWO}BBB{THREE,FOUR,FIVE}CCC{SIX,SEVEN}DDD": "AAA{ISA,DALAWA}BBB{}CCC{SICKS,SEBEN}DDD"
+                "{despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}": "{despe,sepa}rat{}"
               }
             },
             {
