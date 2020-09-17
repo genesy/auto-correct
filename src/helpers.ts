@@ -40,3 +40,9 @@ export function getConfig() {
   );
   return config;
 }
+
+export function getLastWord(inputText: string) {
+  const re = /((\p{L}|[><=+.,;@*()?!#$€%§&_'"\/\\-])+)[-_><\W]?$/gu;
+  const match = re.exec(inputText);
+  return match && match.length > 1 && match[1]
+}

@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import { getWords } from './helpers';
+import { getWords, getLastWord } from './helpers';
 
 // let config: vscode.WorkspaceConfiguration;
 let words: any;
@@ -47,9 +47,7 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
   );
 
   // matches letters and special letters
-  const re = /(\p{L}+)[\W]?$/gu;
-  const match = re.exec(text);
-  const lastWord = match && match.length > 1 && match[1];
+  const lastWord = getLastWord(text);
 
   // if (triggers.length) {
   //   const lastTyped = text.substr(-1);
@@ -86,3 +84,5 @@ function correctTheWord(event: vscode.TextDocumentChangeEvent): void {
     );
   }
 }
+
+
