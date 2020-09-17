@@ -1,8 +1,10 @@
-interface Dictionary {
+export interface DictionaryWords {
+  [key: string]: string
+}
+
+export interface Dictionary {
   languages: string[];
-  words: Object;
+  words: DictionaryWords;
   useLargeList: Boolean;
   triggers: string[];
 }
-
-export default Dictionary;
