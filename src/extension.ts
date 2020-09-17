@@ -1,25 +1,28 @@
-import { ExtensionContext, Position, Range, TextDocumentChangeEvent, window, workspace } from 'vscode';
-import { getWords, getLastWord } from './helpers';
+import { ExtensionContext, Position, Range, TextDocumentChangeEvent, window, workspace, WorkspaceConfiguration } from 'vscode';
+import { getWords, getLastWord, getConfig } from './helpers';
 import { DictionaryWords } from './types/Dictionary';
 
-// let config: WorkspaceConfiguration;
+let config: WorkspaceConfiguration;
 let words: DictionaryWords;
 // let triggers: string[];
 
 export function activate(_context: ExtensionContext) {
-  words = words || getWords();
+  config = getConfig();
+  words = getWords(config);
+
   workspace.onDidOpenTextDocument(() => {
-    words = words || getWords();
+    words = words || getWords(config);
   });
   workspace.onDidChangeTextDocument(event => {
-    words = words || getWords();
+    words = words || getWords(config);
     correctTheWord(event);
   });
-  // workspace.onDidChangeConfiguration(e => {
-  //   if (e.affectsConfiguration('auto-correct')) {
-  //     config = getConfig();
-  //   }
-  // });
+  workspace.onDidChangeConfiguration(e => {
+    if (e.affectsConfiguration('auto-correct')) {
+      config = getConfig();
+      words = getWords(config);
+    }
+  });
 }
 
 // this method is called when your extension is deactivated

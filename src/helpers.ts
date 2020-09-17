@@ -3,9 +3,8 @@ import { DictionaryWords, Dictionary } from './types/Dictionary';
 import * as largeList from './defaultList.json';
 import expandBraces from './expandBraces';
 
-export function getWords() {
+export function getWords(config: WorkspaceConfiguration) {
   const editor = window.activeTextEditor;
-  const config = getConfig();
   const dictionary = config.get<Dictionary[]>('dictionary', [
     { languages: [], words: {}, useLargeList: false, triggers: [] },
   ]);
