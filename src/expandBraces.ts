@@ -1,6 +1,8 @@
-export default function expandBraces(dict: any): any {
+import { DictionaryWords } from "./types/Dictionary";
+
+export default function expandBraces(dict: DictionaryWords): DictionaryWords {
   let redo = 0;
-  let newDict: any = {};
+  let newDict: DictionaryWords = {};
   for (const key in dict) {
     const value = dict[key];
     if (key.match(/{.*}/g)) {
