@@ -3,7 +3,9 @@ import { DictionaryWords, Dictionary } from './types/Dictionary';
 import * as largeList from './defaultList.json';
 import expandBraces from './expandBraces';
 
-// Loads up the pairs of corrections to check that are pertinent for the current context
+/**
+ * Loads up the pairs of corrections to check (that are pertinent for the current context)
+ */
 export function getWords(config: WorkspaceConfiguration) {
   const editor = window.activeTextEditor;
   const dictionary = config.get<Dictionary[]>('dictionary', [
@@ -30,7 +32,9 @@ export function getWords(config: WorkspaceConfiguration) {
   return expandBraces(words);
 }
 
-// Pulls the "auto-correct" section out of the VSCode configuration
+/**
+ * Pulls the "auto-correct" section out of the VSCode configuration
+ */
 export function getConfig(): WorkspaceConfiguration {
   const editor = window.activeTextEditor;
   const config = workspace.getConfiguration(
@@ -40,9 +44,12 @@ export function getConfig(): WorkspaceConfiguration {
   return config;
 }
 
-// Retrieves the last "word" from the given inputText.
-// A "word" is any string of letters and/or certain special symbols, optionally followed by one non-alphanumeric.
-// (The returned word does not include the trailing non-alphanumeric.)
+/**
+ * Retrieves the last "word" from the given inputText.
+ * A "word" is any string of letters and/or certain special symbols,
+ * optionally followed by one non-alphanumeric.
+ * (The returned word does not include the trailing non-alphanumeric.)
+ */
 export function getLastWord(inputText: string): string | undefined {
   // \p{L} matches anything letter-ish
   // \w (lowercase w) matches any alphanumeric [A-Za-z0-9_]

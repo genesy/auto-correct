@@ -1,6 +1,8 @@
 import { DictionaryWords } from "./types/Dictionary";
 
-// Expands the vim-abolish style multiple-word-ending specifications into distinct pairs
+/**
+ * Expands the vim-abolish style multiple-word-ending specifications into distinct pairs
+ */
 export default function expandBraces(dict: DictionaryWords): DictionaryWords {
   let redo = 0;
   let newDict: DictionaryWords = {};
